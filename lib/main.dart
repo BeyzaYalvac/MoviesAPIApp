@@ -36,10 +36,17 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: Scaffold(
 
+      home: Scaffold(
+appBar: AppBar(
+  backgroundColor: Colors.red,
+  centerTitle: true,
+  title: Text('MovieApp',style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),),
+  leading:Icon(Icons.movie,color: Colors.white,size: 45,)
+),
         body: PopularMoviePage(),
       )
+
     );
   }
 }

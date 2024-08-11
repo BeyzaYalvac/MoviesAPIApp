@@ -52,13 +52,13 @@ class _MovieDetailsState extends State<MovieDetails> {
                   children: [
                     SizedBox(height: 60),
                     Text(
-                      movieInfo['title'] ?? 'No title', // Show movie title
+                      'Rating: ${movieInfo['vote_average'] ?? '0.0'}', // Show movie rating
                       style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
                         color: Colors.white,
                       ),
                     ),
+
                     SizedBox(height: 8),
                     Text(
                       'Release Date: ${movieInfo['release_date'] ?? 'Unknown'}', // Show release date
@@ -94,20 +94,27 @@ class _MovieDetailsState extends State<MovieDetails> {
           ),
           Positioned(
             top: MediaQuery.of(context).size.height * 0.4,
-            left: MediaQuery.of(context).size.width * 0.2,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.08,
-              width: MediaQuery.of(context).size.width * 0.6,
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Center(
-                child: Text(
-                  'Rating: ${movieInfo['vote_average'] ?? '0.0'}', // Show movie rating
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
+            left: MediaQuery.of(context).size.width * 0.1,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.1,
+                width: MediaQuery.of(context).size.width * 0.8,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      movieInfo['title'] ?? 'No title', // Show movie title
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
                 ),
               ),
