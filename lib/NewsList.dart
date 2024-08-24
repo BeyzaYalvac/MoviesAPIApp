@@ -25,19 +25,24 @@ class _PopularMoviePageState extends State<PopularMoviePage> {
   void _fetchMovies() {
     final api = ApiService();
     setState(() {
-      _moviesFuture = api.fetchPopularMovies(currentPage+1);
+      if (searchData.isEmpty) {
+        _moviesFuture = api.fetchPopularMovies(currentPage + 1);
+      } else {
+        _moviesFuture = api.searchPopularMovies(searchData,currentPage+1);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     const String BASE_IMAGE = 'https://image.tmdb.org/t/p/w500';
-// instantiate the controller in your state
+
     final NumberPaginatorController _controller = NumberPaginatorController();
 
     return Scaffold(
       body: Column(
         children: [
+
           Container(
             decoration: BoxDecoration(color: Colors.black),
             child: Padding(
@@ -50,11 +55,18 @@ class _PopularMoviePageState extends State<PopularMoviePage> {
                   setState(() {
                     searchData = search.toLowerCase();
                     print(searchData);
+                    _fetchMovies();
                   });
                 },
               ),
             ),
           ),
+          Container(width:MediaQuery.of(context).size.width,
+          child: Center(child: Text("Popular Movies",
+            style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 26),)),
+              decoration: BoxDecoration(color: Colors.black,)),
+
+
           Expanded(
             child: Container(
               decoration: BoxDecoration(color: Colors.black),
@@ -143,6 +155,7 @@ class _PopularMoviePageState extends State<PopularMoviePage> {
                                     ],
                                   ),
                                   Positioned(
+
                                     right: 0,
                                     top: 0,
                                     child: Container(

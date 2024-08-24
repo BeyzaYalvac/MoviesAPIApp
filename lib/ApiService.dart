@@ -23,4 +23,23 @@ print(data);
       throw Exception('Failed to load movies: ${response.statusCode}');
     }
   }
-}
+
+
+
+  Future<Map<String,dynamic>> searchPopularMovies(String query, int currentPage) async{
+    final url=Uri.parse('$BASE_URL/search/movie?query=$query&page=$currentPage');
+    final responseSearch=await http.get(url,headers:{
+      'Authorization':'Bearer $ACCESS_TOKEN',
+      'Content-Type': 'application/json',
+    });
+    if(responseSearch.statusCode==200) {
+      var dataSearch = jsonDecode(responseSearch.body);
+      print('search data= $dataSearch');
+      return dataSearch;
+    }else {
+
+      throw Exception('Failed to search movies: ${responseSearch.statusCode}');
+    }
+    }
+  }
+

@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MovieDetails extends StatefulWidget {
   final Map<String, dynamic> MovieInfos;
@@ -11,25 +15,72 @@ class MovieDetails extends StatefulWidget {
 }
 
 class _MovieDetailsState extends State<MovieDetails> {
+
+  bool isFavorite = false;
   @override
+  void initState() {
+    super.initState();
+    getFavorite();
+  }
+
+  Future<void> _setFavoriteState(bool isFavorite) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('favorite_${widget.id}', isFavorite);
+
+  }
+
+  Future<void> getFavorite() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool? getfav = prefs.getBool('favorite_${widget.id}');
+    setState(() {
+      isFavorite = getfav ?? false;
+    });
+  }
+
   Widget build(BuildContext context) {
+
     final movieInfo = widget.MovieInfos;
 
+    Future<void> addFavoriteMoviesToDB() async {
+      FirebaseFirestore favMovieDbObj = FirebaseFirestore.instance;
+      CollectionReference favmovieColRef =
+      favMovieDbObj.collection('SavedMovies');
+
+      await favmovieColRef.doc(movieInfo['title']).set(widget.MovieInfos);
+    }
+
+    Future<void> deleteFavoriteMoviesToDB() async {
+      FirebaseFirestore favMovieDbObj = FirebaseFirestore.instance;
+      CollectionReference favmovieColRef =
+      favMovieDbObj.collection('SavedMovies');
+      await favmovieColRef.doc(movieInfo['title']).delete();
+    }
+    Future<void> _toggleFavorite() async {
+
+      setState(() {
+        isFavorite = !isFavorite;
+      });
+
+      await _setFavoriteState(isFavorite);
+
+      if (isFavorite) {
+        await addFavoriteMoviesToDB();
+      } else {
+        await deleteFavoriteMoviesToDB();
+      }
+    }
     return Scaffold(
       body: Stack(
         children: [
           Container(
             height: MediaQuery.of(context).size.height,
             child: Container(
-
               decoration: BoxDecoration(
-
                 image: DecorationImage(
-                  image: NetworkImage(
-                    'https://image.tmdb.org/t/p/w500${movieInfo['backdrop_path']}',
-                  ),
-                  fit: BoxFit.fitHeight
-                ),
+                    image: NetworkImage(
+                      'https://image.tmdb.org/t/p/w500${movieInfo['backdrop_path']}',
+                    ),
+                    fit: BoxFit.fitHeight),
               ),
             ),
           ),
@@ -51,14 +102,31 @@ class _MovieDetailsState extends State<MovieDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 60),
-                    Text(
-                      'Rating: ${movieInfo['vote_average'] ?? '0.0'}', // Show movie rating
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          'Rating: ${movieInfo['vote_average'] ?? '0.0'}', // Show movie rating
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        IconButton(
+                          icon: isFavorite
+                              ? Icon(
+                                  Icons.favorite_rounded,
+                                  color: Colors.red,
+                                )
+                              : Icon(
+                                  Icons.favorite_border,
+                                  color: Colors.red,
+                                ),
+                          onPressed: () {
+                            _toggleFavorite();
+                          },
+                        )
+                      ],
                     ),
-
                     SizedBox(height: 8),
                     Text(
                       'Release Date: ${movieInfo['release_date'] ?? 'Unknown'}', // Show release date
@@ -79,7 +147,8 @@ class _MovieDetailsState extends State<MovieDetails> {
                     Expanded(
                       child: SingleChildScrollView(
                         child: Text(
-                          movieInfo['overview'] ?? 'No overview available', // Show movie overview
+                          movieInfo['overview'] ??
+                              'No overview available', // Show movie overview
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.white70,
@@ -108,7 +177,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      movieInfo['title'] ?? 'No title', // Show movie title
+                      movieInfo['title'] ?? 'No title',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

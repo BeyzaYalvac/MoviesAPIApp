@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "747458844179",
+    "project_id": "flutterfilmleruygulamasi",
+    "storage_bucket": "flutterfilmleruygulamasi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:747458844179:android:9b0f4177f6e5ed5ca051e6",
+        "android_client_info": {
+          "package_name": "com.example.flutterfilmleruygulamasi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm3yrJWaOvwyt3R7Zi3wSwqCo_2o8Cubk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
