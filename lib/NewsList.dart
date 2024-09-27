@@ -4,6 +4,9 @@ import 'package:flutterfilmleruygulamasi/ApiService.dart';
 import 'package:flutterfilmleruygulamasi/MovieDetail.dart';
 import 'package:number_paginator/number_paginator.dart';
 
+import 'FavoriteList.dart';
+import 'askAI.dart';
+
 class PopularMoviePage extends StatefulWidget {
   const PopularMoviePage({super.key});
 
@@ -40,6 +43,93 @@ class _PopularMoviePageState extends State<PopularMoviePage> {
     final NumberPaginatorController _controller = NumberPaginatorController();
 
     return Scaffold(
+      appBar: AppBar(
+
+        backgroundColor: Colors.black,
+        elevation: 0,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
+      drawer: Drawer(
+        backgroundColor: Colors.black,
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.red, Colors.black],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "Movie IT",
+                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            ListTile(
+              tileColor: Colors.red,
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
+                child: Text(
+                  "Popular Films",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PopularMoviePage()),
+                );
+              },
+            ),
+            SizedBox(height: 16.0),
+            ListTile(
+              tileColor: Colors.white,
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
+                child: Text(
+                  "Your Favorite Films",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FavoriteListPage()),
+                );
+              },
+            ),
+            SizedBox(height: 16.0),
+            ListTile(
+              tileColor: Colors.white,
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
+                child: Text(
+                  "Ask AI",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatBotPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       body: Column(
         children: [
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutterfilmleruygulamasi/FavoriteList.dart';
 import 'NewsList.dart';
 import 'applicatonMainPage.dart';
+import 'askAI.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -107,6 +108,7 @@ class HomePage extends StatelessWidget {
                 );
               },
             ),
+            SizedBox(height: 16.0),
             ListTile(
               tileColor: Colors.white,
               leading: Icon(Icons.moving_sharp, color: Colors.black),
@@ -123,19 +125,32 @@ class HomePage extends StatelessWidget {
                 );
               },
             ),
+            SizedBox(height: 16.0),
+            ListTile(
+              tileColor: Colors.white,
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
+                child: Text(
+                  "Ask AI",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatBotPage()),
+                );
+              },
+            ),
           ],
         ),
       ),
       body:
-
-
             Column(
               children: [
 
                 Expanded(child: MainPage()),],
-            ), // Space for the slider to start below the appbar
-
-              // Your main content (slider, etc.)
+            ),
 
 
 

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfilmleruygulamasi/NewsList.dart';
+import 'package:flutterfilmleruygulamasi/askAI.dart';
 import 'package:lottie/lottie.dart';
 
 class FavoriteListPage extends StatefulWidget {
@@ -15,6 +16,92 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: Icon(Icons.menu, color: Colors.white),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
+      drawer: Drawer(
+        backgroundColor: Colors.black,
+        child: ListView(
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.red, Colors.black],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "Movie IT",
+                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            ListTile(
+              tileColor: Colors.red,
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
+                child: Text(
+                  "Popular Films",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PopularMoviePage()),
+                );
+              },
+            ),
+            SizedBox(height: 16.0),
+            ListTile(
+              tileColor: Colors.white,
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
+                child: Text(
+                  "Your Favorite Films",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FavoriteListPage()),
+                );
+              },
+            ),
+            SizedBox(height: 16.0),
+            ListTile(
+              tileColor: Colors.white,
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
+                child: Text(
+                  "Ask AI",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ChatBotPage()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       backgroundColor: Colors.black,
       body: StreamBuilder<QuerySnapshot>(
         stream:
@@ -83,8 +170,13 @@ class _FavoriteListPageState extends State<FavoriteListPage> {
                       .doc(favoriteMovies['original_title'] ?? 'title')
                       .delete();
                 },
-                child: ListTile(
-                  title: Text(favoriteMovies['original_title'] ?? 'title'),
+                child: Card(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+
+                  child: ListTile(
+                    tileColor: Colors.red,
+
+                    title: Center(child: Text(favoriteMovies['original_title'] ?? 'title',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),)),
+                  ),
                 ),
               );
             },
