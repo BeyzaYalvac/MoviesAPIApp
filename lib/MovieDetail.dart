@@ -19,7 +19,6 @@ class MovieDetails extends StatefulWidget {
 }
 
 class _MovieDetailsState extends State<MovieDetails> {
-
   bool isFavorite = false;
   @override
   void initState() {
@@ -30,7 +29,6 @@ class _MovieDetailsState extends State<MovieDetails> {
   Future<void> _setFavoriteState(bool isFavorite) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('favorite_${widget.id}', isFavorite);
-
   }
 
   Future<void> getFavorite() async {
@@ -42,13 +40,12 @@ class _MovieDetailsState extends State<MovieDetails> {
   }
 
   Widget build(BuildContext context) {
-
     final movieInfo = widget.MovieInfos;
 
     Future<void> addFavoriteMoviesToDB() async {
       FirebaseFirestore favMovieDbObj = FirebaseFirestore.instance;
       CollectionReference favmovieColRef =
-      favMovieDbObj.collection('SavedMovies');
+          favMovieDbObj.collection('SavedMovies');
 
       await favmovieColRef.doc(movieInfo['title']).set(widget.MovieInfos);
     }
@@ -56,11 +53,11 @@ class _MovieDetailsState extends State<MovieDetails> {
     Future<void> deleteFavoriteMoviesToDB() async {
       FirebaseFirestore favMovieDbObj = FirebaseFirestore.instance;
       CollectionReference favmovieColRef =
-      favMovieDbObj.collection('SavedMovies');
+          favMovieDbObj.collection('SavedMovies');
       await favmovieColRef.doc(movieInfo['title']).delete();
     }
-    Future<void> _toggleFavorite() async {
 
+    Future<void> _toggleFavorite() async {
       setState(() {
         isFavorite = !isFavorite;
       });
@@ -73,9 +70,9 @@ class _MovieDetailsState extends State<MovieDetails> {
         await deleteFavoriteMoviesToDB();
       }
     }
+
     return Scaffold(
       appBar: AppBar(
-
         backgroundColor: Colors.black,
         elevation: 0,
         leading: Builder(
@@ -104,7 +101,10 @@ class _MovieDetailsState extends State<MovieDetails> {
               child: Center(
                 child: Text(
                   "Movie IT",
-                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
             ),
@@ -160,122 +160,120 @@ class _MovieDetailsState extends State<MovieDetails> {
           ],
         ),
       ),
-      body: Stack(
-        children: [
+      body: Column(
+        children: [Stack(children: [
+
           Container(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height * 0.30,
             child: Container(
+              height: MediaQuery.of(context).size.height * 0.5,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: NetworkImage(
-                      'https://image.tmdb.org/t/p/w500${movieInfo['backdrop_path']}',
-                    ),
-                    fit: BoxFit.fitHeight),
-              ),
-            ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.44,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.56,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.black87,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 60),
-                    Row(
-                      children: [
-                        Text(
-                          'Rating: ${movieInfo['vote_average'] ?? '0.0'}', // Show movie rating
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                          ),
-                        ),
-                        IconButton(
-                          icon: isFavorite
-                              ? Icon(
-                                  Icons.favorite_rounded,
-                                  color: Colors.red,
-                                )
-                              : Icon(
-                                  Icons.favorite_border,
-                                  color: Colors.red,
-                                ),
-                          onPressed: () {
-                            _toggleFavorite();
-                          },
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Release Date: ${movieInfo['release_date'] ?? 'Unknown'}', // Show release date
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Overview',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Text(
-                          movieInfo['overview'] ??
-                              'No overview available', // Show movie overview
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  fit: BoxFit.cover,
+                  image: NetworkImage(
+                    'https://image.tmdb.org/t/p/w500${movieInfo['backdrop_path']}',
+                  ),
                 ),
               ),
             ),
           ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.4,
-            left: MediaQuery.of(context).size.width * 0.1,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+
+            Positioned(
+              top:150,
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.1,
-                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.56,
+                width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.black87,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
                 ),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      movieInfo['title'] ?? 'No title',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                child: Padding(
+                  padding: const EdgeInsets.only(left:190,top: 26,right: 16,bottom: 16),
+                  child: Text(
+                    movieInfo['title'] ?? 'No title',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                 ),
+              ),
+            )
+          ]),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.5975,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              color: Colors.black,
+
+            ),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 60),
+                  Row(
+                    children: [
+                      Text(
+                        'Rating: ${movieInfo['vote_average'].toStringAsFixed(1) ?? '0.0'}', // Show movie rating
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(width: MediaQuery.of(context).size.width*0.45),
+                      IconButton(
+                        icon: isFavorite
+                            ?  Icon(
+                          size: 46,
+                          Icons.favorite_rounded,
+                          color: Colors.red,
+                        )
+                            : Icon(
+                          size: 46,
+                          Icons.favorite_border,
+                          color: Colors.red,
+                        ),
+                        onPressed: () {
+                          _toggleFavorite();
+                        },
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Release Date: ${movieInfo['release_date'] ?? 'Unknown'}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Overview',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Text(
+                        movieInfo['overview'] ??
+                            'No overview available',
+                        style: TextStyle(
+                          fontSize: 24,
+                          color: Colors.white70,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
