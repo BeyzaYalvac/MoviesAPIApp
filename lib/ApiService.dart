@@ -7,39 +7,56 @@ class ApiService {
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyN2Y3MjVmZGYwNTI3MWUwYjRlNGZhN2ZjN2RiMmFhMiIsIm5iZiI6MTcyMzIwODMwMC4xODgwMjYsInN1YiI6IjY2YjYxMTZmNDA1OWZhYzQ1NTEyNTM3NSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.KGuZaOiM_0T0l9ZMJ1tmwcNOLC-JRua8zmVMNTwMmgI';
 
   Future<Map<String, dynamic>> fetchPopularMovies(int currentPage) async {
-    final url = Uri.parse('$BASE_URL/movie/popular?language=en-US&page=$currentPage');
+    final url =
+        Uri.parse('$BASE_URL/movie/popular?language=en-US&page=$currentPage');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $ACCESS_TOKEN',
       'Content-Type': 'application/json',
     });
 
     if (response.statusCode == 200) {
-var data=jsonDecode(response.body);
-print(data);
+      var data = jsonDecode(response.body);
+      print(data);
       return data;
-
     } else {
-
       throw Exception('Failed to load movies: ${response.statusCode}');
     }
   }
 
-
-
-  Future<Map<String,dynamic>> searchPopularMovies(String query, int currentPage) async{
-    final url=Uri.parse('$BASE_URL/search/movie?query=$query&page=$currentPage');
-    final responseSearch=await http.get(url,headers:{
-      'Authorization':'Bearer $ACCESS_TOKEN',
+  Future<Map<String, dynamic>> searchPopularMovies(
+      String query, int currentPage) async {
+    final url =
+        Uri.parse('$BASE_URL/search/movie?query=$query&page=$currentPage');
+    final responseSearch = await http.get(url, headers: {
+      'Authorization': 'Bearer $ACCESS_TOKEN',
       'Content-Type': 'application/json',
     });
-    if(responseSearch.statusCode==200) {
+    if (responseSearch.statusCode == 200) {
       var dataSearch = jsonDecode(responseSearch.body);
       print('search data= $dataSearch');
       return dataSearch;
-    }else {
-
+    } else {
       throw Exception('Failed to search movies: ${responseSearch.statusCode}');
-    }
     }
   }
 
+  Future<Map<String, dynamic>> getPopularArtist(
+      String timeWindow, int currentPage) async {
+    final url =
+        Uri.parse('$BASE_URL/trending/person/$timeWindow&page=$currentPage');
+    final responseArtist = await http.get(url, headers: {
+      'Authorization': 'Bearer $ACCESS_TOKEN',
+      'Content-Type': 'application/json',
+    });
+
+    if (responseArtist.statusCode == 200) {
+      var artistData = jsonDecode(responseArtist.body);
+      print('Artist data=$artistData');
+      return artistData;
+    } else {
+      print(
+          'Error fetching artists: ${responseArtist.statusCode} ${responseArtist.body}');
+      throw Exception('Failed to fetch artists: ${responseArtist.statusCode}');
+    }
+  }
+}
