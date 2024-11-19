@@ -10,7 +10,7 @@ class BestOfArtists extends StatefulWidget {
 
 class _BestOfArtistsState extends State<BestOfArtists> {
   Future<Map<String, dynamic>>? _artistFuture;
-  int currentPage = 1;
+
 
   @override
   void initState() {
@@ -21,41 +21,55 @@ class _BestOfArtistsState extends State<BestOfArtists> {
   void _fetchArtists() {
     final api = ApiService();
     setState(() {
-      _artistFuture = api.getPopularArtist('day', currentPage + 1);
+      _artistFuture = api.getPopularArtist('day');
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: FutureBuilder<Map<String, dynamic>>(
-          future: _artistFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else if (snapshot.hasData) {
-              final artists = snapshot.data!['results'] as List<dynamic>? ?? [];
+      appBar: AppBar(title: const Text('Best of Artists')),
+      body: FutureBuilder<Map<String, dynamic>>(
+        future: _artistFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}\nPlease try again later.'),
+            );
+          } else if (snapshot.hasData) {
+            final artists = snapshot.data!['results'] as List<dynamic>? ?? [];
 
-              if (artists.isEmpty) {
-                return const Center(child: Text('No artists found.'));
-              }
-
-              return ListView.builder(
-                itemCount: artists.length,
-                itemBuilder: (context, index) {
-                  final artist = artists[index];
-                  return ListTile(
-                    title: Text(artist['name']),
-                  );
-                },
-              );
+            if (artists.isEmpty) {
+              return const Center(child: Text('No artists found.'));
             }
-            return const Center(child: Text('No data available.'));
-          },
-        ),
+
+            return ListView.builder(
+              itemCount: artists.length,
+              itemBuilder: (context, index) {
+
+                final artist = artists[index];
+                if(index<10){
+                return ListTile(
+                  leading: Text((index+1).toString()),
+                  tileColor: Colors.orangeAccent[100],
+                  trailing:Text(artist['gender']==0 ? 'Woman' : 'Boy',style: artist['gender']==0?TextStyle(color: Colors.pink):TextStyle(color: Colors.blue),),
+                  title: Text(artist['name'] ?? 'Unknown Artist'),
+                );}
+                else{
+                  return ListTile(
+                    leading: Text((index+1).toString()),
+                    tileColor: Colors.orange,
+                    trailing:Text(artist['gender']==0 ? 'Woman' : 'Boy',style: artist['gender']==0?TextStyle(color: Colors.pink):TextStyle(color: Colors.blue),),
+                    title: Text(artist['name'] ?? 'Unknown Artist'),
+                  );}
+                }
+
+            );
+          }
+          return const Center(child: Text('No data available.'));
+        },
       ),
     );
   }

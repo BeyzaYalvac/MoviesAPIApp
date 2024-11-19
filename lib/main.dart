@@ -8,12 +8,15 @@ import 'askAI.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
+WidgetsFlutterBinding.ensureInitialized();
+
+await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
+  runApp(const MyApp() );
+
+
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           // This is the theme of your application.
@@ -44,7 +47,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const HomePage());
+        home: HomePage());
   }
 }
 
@@ -63,7 +66,7 @@ class HomePage extends StatelessWidget {
         leading: Builder(
           builder: (context) {
             return IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
+              icon: Icon(Icons.menu, color: Colors.white),
               onPressed: () {
                 Scaffold.of(context).openDrawer();
               },
@@ -75,7 +78,7 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.black,
         child: ListView(
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [Colors.red, Colors.black],
@@ -86,17 +89,14 @@ class HomePage extends StatelessWidget {
               child: Center(
                 child: Text(
                   "Movie IT",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold),
+                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
                 ),
               ),
             ),
             ListTile(
               tileColor: Colors.red,
-              leading: const Icon(Icons.moving_sharp, color: Colors.black),
-              title: const Center(
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
                 child: Text(
                   "Popular Films",
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -105,16 +105,15 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const PopularMoviePage()),
+                  MaterialPageRoute(builder: (context) => PopularMoviePage()),
                 );
               },
             ),
-            const SizedBox(height: 16.0),
+            SizedBox(height: 16.0),
             ListTile(
               tileColor: Colors.white,
-              leading: const Icon(Icons.moving_sharp, color: Colors.black),
-              title: const Center(
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
                 child: Text(
                   "Your Favorite Films",
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -123,16 +122,15 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const FavoriteListPage()),
+                  MaterialPageRoute(builder: (context) => FavoriteListPage()),
                 );
               },
             ),
-            const SizedBox(height: 16.0),
+            SizedBox(height: 16.0),
             ListTile(
               tileColor: Colors.white,
-              leading: const Icon(Icons.moving_sharp, color: Colors.black),
-              title: const Center(
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
                 child: Text(
                   "Ask AI",
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -141,35 +139,41 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ChatBotPage()),
+                  MaterialPageRoute(builder: (context) => ChatBotPage()),
                 );
               },
             ),
             ListTile(
-              tileColor: Colors.white,
-              leading: const Icon(Icons.moving_sharp, color: Colors.red),
-              title: const Center(
+              tileColor: Colors.red,
+              leading: Icon(Icons.moving_sharp, color: Colors.black),
+              title: Center(
                 child: Text(
-                  "Best Of Artist",
+                  "Best Of Artists",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const BestOfArtists()),
+                  MaterialPageRoute(builder: (context) => BestOfArtists()),
                 );
               },
-            )
+            ),
           ],
         ),
       ),
-      body: const Column(
-        children: [
-          Expanded(child: MainPage()),
-        ],
-      ),
+      body:
+            Column(
+              children: [
+
+                Expanded(child: MainPage()),],
+            ),
+
+
+
+
     );
   }
 }
+
+

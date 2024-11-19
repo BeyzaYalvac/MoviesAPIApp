@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MainPage extends StatefulWidget {
@@ -20,30 +21,30 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
+      backgroundColor: Colors.black,
         body: Container(
             child: CarouselSlider(
-          options: CarouselOptions(
-            aspectRatio: 1.5, //hız
-            autoPlay: true,
-            viewportFraction: 1.03,
-            animateToClosest: true,
-            height: MediaQuery.of(context).size.height * 0.35,
-          ),
-          items: imgList.map((item) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                    width: MediaQuery.of(context).size.width * 2,
-                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: const BoxDecoration(color: Colors.black),
-                    child: Image.network(
-                      item,
-                      fit: BoxFit.cover,
-                    ));
-              },
-            );
-          }).toList(),
-        )));
+      options: CarouselOptions(
+        aspectRatio: 1.5, //hız
+        autoPlay: true,
+        viewportFraction: 1.03,
+        animateToClosest: true,
+        height: MediaQuery.of(context).size.height * 0.35,
+      ),
+      items: imgList.map((item) {
+        return Builder(
+          builder: (BuildContext context) {
+            return Container(
+                width: MediaQuery.of(context).size.width * 2,
+                margin: EdgeInsets.symmetric(horizontal: 5.0),
+                decoration: BoxDecoration(color: Colors.black),
+                child: Image.network(
+                  item,
+                  fit: BoxFit.cover,
+                ));
+          },
+        );
+      }).toList(),
+    )));
   }
 }

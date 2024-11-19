@@ -1,4 +1,4 @@
-import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -26,7 +26,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
     });
   }
 
-  TextEditingController _prompt = TextEditingController();
+
   String prompt_input = '';
   String responseText = "";
 
@@ -38,7 +38,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
     final prompt =
         'lütfen bana ${message.text}\'e benzeyen filmleri veya dizileri liste şeklinde ver!';
     try {
-      showInfoMessage();
+
 
       final response = await model.generateContent([Content.text(prompt)]);
       print(response.text);
@@ -75,7 +75,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
       createdAt: DateTime.now().millisecondsSinceEpoch,
       id: DateTime.now().toString(),
       text:
-          'Merhaba! 🎬 \n Sana film veya dizi önerilerinde bulunabilirim! Favori filmini ya da dizini benimle paylaş!'
+      'Merhaba! 🎬 \n Sana film veya dizi önerilerinde bulunabilirim! Favori filmini ya da dizini benimle paylaş!'
           'ben de senin zevkine uygun benzer yapımları sana liste halinde sunayım.'
           '\nÖrneğin: Inception filmini yazarsan, ona benzer filmleri sana önereceğim. 😊'
           '\nHazırsan, sevdiğin bir film ya da dizi adıyla başlayabilirsin!'

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfilmleruygulamasi/ApiService.dart';
 import 'package:flutterfilmleruygulamasi/FavoriteList.dart';
 import 'package:flutterfilmleruygulamasi/NewsList.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,11 +20,13 @@ class MovieDetails extends StatefulWidget {
 }
 
 class _MovieDetailsState extends State<MovieDetails> {
+  Future<Map<String, dynamic>>? movieGenre;
   bool isFavorite = false;
   @override
   void initState() {
     super.initState();
     getFavorite();
+    _fetchMovieGenre();
   }
 
   Future<void> _setFavoriteState(bool isFavorite) async {
@@ -39,9 +42,22 @@ class _MovieDetailsState extends State<MovieDetails> {
     });
   }
 
+  void _fetchMovieGenre() {
+    final api = ApiService();
+    setState(() {
+      movieGenre = api.getMovieGenre();
+    });
+  }
+
   Widget build(BuildContext context) {
     final movieInfo = widget.MovieInfos;
-
+    String _getGenreName(List<dynamic> genres, List<dynamic> genreIds) {
+      final genreNames = genreIds.map((id) {
+        final genre = genres.firstWhere((g) => g['id'] == id, orElse: () => {'name': 'Unknown'});
+        return genre['name'];
+      }).toList();
+      return genreNames.isNotEmpty ? genreNames.join(', ') : 'No genres available';
+    }
     Future<void> addFavoriteMoviesToDB() async {
       FirebaseFirestore favMovieDbObj = FirebaseFirestore.instance;
       CollectionReference favmovieColRef =
@@ -161,25 +177,24 @@ class _MovieDetailsState extends State<MovieDetails> {
         ),
       ),
       body: Column(
-        children: [Stack(children: [
-
-          Container(
-            height: MediaQuery.of(context).size.height * 0.30,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.5,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                    'https://image.tmdb.org/t/p/w500${movieInfo['backdrop_path']}',
+        children: [
+          Stack(children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.30,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                      'https://image.tmdb.org/t/p/w500${movieInfo['backdrop_path']}',
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-
             Positioned(
-              top:150,
+              top: 150,
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.56,
                 width: MediaQuery.of(context).size.width,
@@ -191,7 +206,8 @@ class _MovieDetailsState extends State<MovieDetails> {
                   ),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left:190,top: 26,right: 16,bottom: 16),
+                  padding: const EdgeInsets.only(
+                      left: 190, top: 26, right: 16, bottom: 16),
                   child: Text(
                     movieInfo['title'] ?? 'No title',
                     style: TextStyle(
@@ -209,7 +225,6 @@ class _MovieDetailsState extends State<MovieDetails> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Colors.black,
-
             ),
             child: Center(
               child: Column(
@@ -225,19 +240,19 @@ class _MovieDetailsState extends State<MovieDetails> {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(width: MediaQuery.of(context).size.width*0.45),
+                      SizedBox(width: MediaQuery.of(context).size.width * 0.45),
                       IconButton(
                         icon: isFavorite
-                            ?  Icon(
-                          size: 46,
-                          Icons.favorite_rounded,
-                          color: Colors.red,
-                        )
+                            ? Icon(
+                                size: 46,
+                                Icons.favorite_rounded,
+                                color: Colors.red,
+                              )
                             : Icon(
-                          size: 46,
-                          Icons.favorite_border,
-                          color: Colors.red,
-                        ),
+                                size: 46,
+                                Icons.favorite_border,
+                                color: Colors.red,
+                              ),
                         onPressed: () {
                           _toggleFavorite();
                         },
@@ -252,7 +267,23 @@ class _MovieDetailsState extends State<MovieDetails> {
                       color: Colors.white70,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  FutureBuilder(
+                    future: movieGenre,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error loading genres: ${snapshot.error}', style: TextStyle(color: Colors.white));
+                      } else if (snapshot.hasData) {
+                        final genres = snapshot.data!['genres'] as List;
+                        final genreNames = _getGenreName(genres, movieInfo['genre_ids']);
+                        return Text('Genres: $genreNames', style: TextStyle(color: Colors.white70));
+                      } else {
+                        return Text('No genres available', style: TextStyle(color: Colors.white));
+                      }
+                    },
+                  ),
+                  SizedBox(height: 18),
                   Text(
                     'Overview',
                     style: TextStyle(
@@ -264,8 +295,7 @@ class _MovieDetailsState extends State<MovieDetails> {
                   Expanded(
                     child: SingleChildScrollView(
                       child: Text(
-                        movieInfo['overview'] ??
-                            'No overview available',
+                        movieInfo['overview'] ?? 'No overview available',
                         style: TextStyle(
                           fontSize: 24,
                           color: Colors.white70,

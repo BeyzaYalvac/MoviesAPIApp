@@ -22,7 +22,7 @@ class ApiService {
       throw Exception('Failed to load movies: ${response.statusCode}');
     }
   }
-//fgdfgdf
+
   Future<Map<String, dynamic>> searchPopularMovies(
       String query, int currentPage) async {
     final url =
