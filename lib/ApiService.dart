@@ -22,7 +22,7 @@ class ApiService {
       throw Exception('Failed to load movies: ${response.statusCode}');
     }
   }
-
+//fgdfgdf
   Future<Map<String, dynamic>> searchPopularMovies(
       String query, int currentPage) async {
     final url =
@@ -41,9 +41,9 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> getPopularArtist(
-      String timeWindow, int currentPage) async {
+      String timeWindow) async {
     final url =
-        Uri.parse('$BASE_URL/trending/person/$timeWindow&page=$currentPage');
+        Uri.parse('$BASE_URL/trending/person/$timeWindow');
     final responseArtist = await http.get(url, headers: {
       'Authorization': 'Bearer $ACCESS_TOKEN',
       'Content-Type': 'application/json',
@@ -57,6 +57,24 @@ class ApiService {
       print(
           'Error fetching artists: ${responseArtist.statusCode} ${responseArtist.body}');
       throw Exception('Failed to fetch artists: ${responseArtist.statusCode}');
+    }
+  }
+
+  Future<Map<String,dynamic>> getMovieGenre() async {
+    final url=Uri.parse('$BASE_URL/genre/list?language=en-US');
+    final responseForMovieGenre= await http.get(url,headers: {
+      'Authorization': 'Bearer $ACCESS_TOKEN',
+      'Content-Type': 'application/json',
+    });
+
+    if(responseForMovieGenre.statusCode==200){
+      var genreData=jsonDecode(responseForMovieGenre.body);
+      return genreData;
+
+    }
+
+    else{
+      throw responseForMovieGenre.statusCode;
     }
   }
 }
