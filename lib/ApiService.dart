@@ -72,7 +72,7 @@ class ApiService {
       return genreData;
 
     }
-
+//github push ve commit videosu
     else{
       throw responseForMovieGenre.statusCode;
     }
